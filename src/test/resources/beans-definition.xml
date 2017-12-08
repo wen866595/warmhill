@@ -1,0 +1,10 @@
+<beans xmlns="http://www.springframework.org/schema/beans">
+
+    <bean id="echoService" class="net.coderbee.warmhill.beans.biz.EchoServiceImpl" />
+
+    <bean id="userService" class="net.coderbee.warmhill.beans.biz.UserServiceImpl">
+        <property name="echoService" ref="echoService" />
+        <property name="who" value="coderbee" />
+    </bean>
+
+</beans>
