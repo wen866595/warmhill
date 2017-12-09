@@ -9,7 +9,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String sayHello(String msg) {
-		return who + " say hello " + msg;
+		return who + " say hello " + echoService.echo(msg);
 	}
 
 	public void setWho(String who) {
