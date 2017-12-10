@@ -15,13 +15,24 @@ import java.util.List;
 public class TestAutoCapableBeanFactory {
 
 	@Test
-	public void test() {
-		ClasspathResources resources = new ClasspathResources("beans-definition.xml");
+	public void testAutoCapable() {
+		test("beans-definition.xml");
+	}
+
+	@Test
+	public void testBeanPostProcerror() {
+		test("ioc.xml");
+	}
+
+	private void test(String xmlPath) {
+		ClasspathResources resources = new ClasspathResources(xmlPath);
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(resources);
 		List<BeanDefinition> definitionList = beanDefinitionReader.load();
 		AutoCapableBeanFactory beanFactory = new AutoCapableBeanFactory();
 
 		definitionList.forEach(beanDefinition -> beanFactory.registerBeanDefinition(beanDefinition));
+		beanFactory.refresh();
+
 		UserService userService = beanFactory.getBean("userService");
 		System.out.println(userService.sayHello("world"));
 	}

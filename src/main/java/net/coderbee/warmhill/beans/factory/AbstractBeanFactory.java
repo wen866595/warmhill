@@ -18,8 +18,12 @@ import java.util.stream.Collectors;
  * @author coderbee on 2017/12/8.
  */
 public class AbstractBeanFactory implements BeanFactory {
+	// 之所以用 List 维持 beanId 是为了保持 bean 的声明顺序。
 	protected List<String> beanIds = new ArrayList<>();
+
+	// Map 是为了提升检索效率
 	protected Map<String, BeanDefinition> definitionMap = new HashMap<>();
+
 	protected List<BeanPostProcessor> processors = new ArrayList<>();
 
 	public AbstractBeanFactory() {
@@ -27,6 +31,7 @@ public class AbstractBeanFactory implements BeanFactory {
 
 	public void registerBeanDefinition(BeanDefinition bdf) {
 		definitionMap.put(bdf.getBeanId(), bdf);
+		beanIds.add(bdf.getBeanId());
 	}
 
 	public void refresh() {
@@ -39,7 +44,7 @@ public class AbstractBeanFactory implements BeanFactory {
 	}
 
 	private void initBeanpostProcess() {
-		List<BeanPostProcessor> processorList = getBeans(BeanPostProcessor.class);
+		processors = getBeans(BeanPostProcessor.class);
 	}
 
 	@Override
