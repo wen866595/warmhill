@@ -1,0 +1,32 @@
+<beans xmlns="http://www.springframework.org/schema/beans">
+
+    <bean id="aspectJAutoProxyCreator" class="net.coderbee.warmhill.aop.AspectJAutoProxyCreator" />
+
+    <bean id="pointcut" class="net.coderbee.warmhill.aop.AspectJExpressionPointcut" >
+        <property name="expression" value="execution(* net.coderbee..*.*(..))" />
+    </bean>
+
+    <bean id="echoService" class="net.coderbee.warmhill.beans.biz.EchoServiceImpl" />
+
+    <bean id="userService" class="net.coderbee.warmhill.beans.biz.UserServiceImpl">
+        <property name="echoService" ref="echoService" />
+        <property name="who" value="coderbee" />
+    </bean>
+
+    <bean id="logBeanPostProcessor" class="net.coderbee.warmhill.beans.LogBeanPostProcessor" />
+
+    <bean id="timerInterceptor" class="net.coderbee.warmhill.aop.TimerInterceptor" />
+
+    <bean id="anotherInterceptor" class="net.coderbee.warmhill.aop.AnotherInterceptor" />
+
+    <bean id="testAdvisor" class="net.coderbee.warmhill.aop.AspectJExpressionPointcutAdvisor">
+        <property name="advice" ref="timerInterceptor" />
+        <property name="pointcut" ref="pointcut" />
+    </bean>
+
+    <bean id="testAdvisor2" class="net.coderbee.warmhill.aop.AspectJExpressionPointcutAdvisor">
+        <property name="advice" ref="anotherInterceptor" />
+        <property name="pointcut" ref="pointcut" />
+    </bean>
+
+</beans>

@@ -24,6 +24,11 @@ public class TestAutoCapableBeanFactory {
 		test("ioc.xml");
 	}
 
+	@Test
+	public void testAop() {
+		test("ioc-aop.xml");
+	}
+
 	private void test(String xmlPath) {
 		ClasspathResources resources = new ClasspathResources(xmlPath);
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(resources);
@@ -34,6 +39,7 @@ public class TestAutoCapableBeanFactory {
 		beanFactory.refresh();
 
 		UserService userService = beanFactory.getBean("userService");
+		System.out.println("\n\n");
 		System.out.println(userService.sayHello("world"));
 	}
 
