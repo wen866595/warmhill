@@ -1,35 +1,18 @@
-package net.coderbee.warmhill.beans;
+package net.coderbee.warmhill.beans.context;
 
-import net.coderbee.warmhill.beans.biz.UserService;
 import net.coderbee.warmhill.beans.config.BeanDefinition;
 import net.coderbee.warmhill.beans.factory.AutoCapableBeanFactory;
 import net.coderbee.warmhill.beans.io.ClasspathResources;
 import net.coderbee.warmhill.beans.io.XmlBeanDefinitionReader;
-import org.junit.Test;
 
 import java.util.List;
 
 /**
- * @author coderbee on 2017/12/9.
+ * @author coderbee on 2017/12/24.
  */
-public class TestAutoCapableBeanFactory {
+public class ClasspathApplicationContext extends AbstractApplicationContext {
 
-	@Test
-	public void testAutoCapable() {
-		test("beans-definition.xml");
-	}
-
-	@Test
-	public void testBeanPostProcerror() {
-		test("ioc.xml");
-	}
-
-	@Test
-	public void testAop() {
-		test("ioc-aop.xml");
-	}
-
-	private void test(String xmlPath) {
+	public ClasspathApplicationContext(String xmlPath) {
 		// 1. 创建一个 类路径下的资源
 		ClasspathResources resources = new ClasspathResources(xmlPath);
 
@@ -42,10 +25,7 @@ public class TestAutoCapableBeanFactory {
 		definitionList.forEach(beanDefinition -> beanFactory.registerBeanDefinition(beanDefinition));
 		beanFactory.refresh();
 
-		// 4. 获取 bean 实例并调用 bean 的方法
-		UserService userService = beanFactory.getBean("userService");
-		System.out.println("\n\n");
-		System.out.println(userService.sayHello("world"));
+		super.beanFactory = beanFactory;
 	}
 
 }
