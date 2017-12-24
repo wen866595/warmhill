@@ -18,6 +18,7 @@ public class AutoCapableBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	protected void applyProperties(Object bean, PropertyValues propertyValues) {
+		// 如果 bean 类型实现了对工厂的监听，则注入工厂实例。
 		if (BeanFactoryAware.class.isAssignableFrom(bean.getClass())) {
 			((BeanFactoryAware) bean).setBeanFactory(this);
 		}

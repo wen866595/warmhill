@@ -35,7 +35,10 @@ public class AbstractBeanFactory implements BeanFactory {
 	}
 
 	public void refresh() {
+		// 创建所有的 BeanPostProcessor 实例
 		initBeanpostProcess();
+
+		// 创建其他的 bean 实例
 		initRemain();
 	}
 
@@ -52,9 +55,16 @@ public class AbstractBeanFactory implements BeanFactory {
 		BeanDefinition bdf = definitionMap.get(beanId);
 		Object bean = bdf.getBean();
 		if (bean == null) {
+			// 1. 创建原始类型的实例
 			bean = createBean(bdf);
+
+			// 2. 注入依赖的属性
 			applyProperties(bean, bdf.getPropertyValues());
+
+			// 3. 加工
 			bean = processBean(bean, bdf);
+
+			// 4. 作为最终的结果 bean
 			bdf.setBean(bean);
 		}
 		return (T) bean;
@@ -63,6 +73,7 @@ public class AbstractBeanFactory implements BeanFactory {
 	protected void applyProperties(Object bean, PropertyValues propertyValues) {
 	}
 
+	// 对原始的 bean 实例进行加工，返回加工后的对象
 	private Object processBean(Object bean, BeanDefinition bdf) {
 		for (BeanPostProcessor beanPostProcessor : processors) {
 			bean = beanPostProcessor.postProcessBeforInit(bean, bdf.getBeanId());
@@ -78,6 +89,7 @@ public class AbstractBeanFactory implements BeanFactory {
 
 	}
 
+	// 创建原始的 bean 实例
 	protected Object createBean(BeanDefinition bdf) {
 		try {
 			Object o = bdf.getType().newInstance();
@@ -87,8 +99,16 @@ public class AbstractBeanFactory implements BeanFactory {
 		}
 	}
 
+	/**
+	 * 获取实现了给定类型的所有 bean 实例。
+	 *
+	 * @param requiredType 目标 bean 类型
+	 * @param <T>
+	 * @return 满足条件的实例列表
+	 */
 	@Override
 	public <T> List<T> getBeans(Class<T> requiredType) {
+		// 按 bean 的声明顺序获取实例
 		List<Object> beans = beanIds.stream()
 				.map(beanId -> definitionMap.get(beanId))
 				.filter(bdf -> requiredType.isAssignableFrom(bdf.getType()))

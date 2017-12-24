@@ -30,14 +30,19 @@ public class TestAutoCapableBeanFactory {
 	}
 
 	private void test(String xmlPath) {
+		// 1. 创建一个 类路径下的资源
 		ClasspathResources resources = new ClasspathResources(xmlPath);
+
+		// 2. 创建一个 bean 定义加载器并加装 bean 定义
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(resources);
 		List<BeanDefinition> definitionList = beanDefinitionReader.load();
-		AutoCapableBeanFactory beanFactory = new AutoCapableBeanFactory();
 
+		// 3. 创建 bean 工厂、注册 bean 定义、初始化所有的 bean
+		AutoCapableBeanFactory beanFactory = new AutoCapableBeanFactory();
 		definitionList.forEach(beanDefinition -> beanFactory.registerBeanDefinition(beanDefinition));
 		beanFactory.refresh();
 
+		// 4. 获取 bean 实例并调用 bean 的方法
 		UserService userService = beanFactory.getBean("userService");
 		System.out.println("\n\n");
 		System.out.println(userService.sayHello("world"));
